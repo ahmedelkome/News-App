@@ -11,7 +11,7 @@ import com.route.newsapp.databinding.ArticleItemBinding
 
 class ArticlesAdapter(var articles:List<Article?>?) : Adapter<ArticlesAdapter.ArticleViewHolder>() {
 
-
+    var onArticleClick:onClickArticle?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
 
@@ -29,12 +29,18 @@ class ArticlesAdapter(var articles:List<Article?>?) : Adapter<ArticlesAdapter.Ar
             articleTitle.text = article?.title
             articleTime.text = article?.publishedAt
             Glide.with(root).load(article?.urlToImage).into(holder.binding.articleImage)
+            holder.binding.root.setOnClickListener {
+                onArticleClick?.onitemclick(article!!)
+            }
         }
     }
 
     fun updateArticles(newList:List<Article?>?){
         articles = newList
         notifyDataSetChanged()
+    }
+    interface onClickArticle {
+        fun onitemclick(article:Article)
     }
 
     class ArticleViewHolder(val binding: ArticleItemBinding) : ViewHolder(binding.root){

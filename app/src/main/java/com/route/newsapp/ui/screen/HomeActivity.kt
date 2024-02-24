@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         pushFragment(newsFragment)
-        binding.title.text = "News App"
+
         selectNavigateItems()
     }
 
@@ -43,14 +43,14 @@ class HomeActivity : AppCompatActivity() {
                 R.id.categories -> {
                     pushFragment(CategoriesFragment())
                     binding.drawer.closeDrawer(GravityCompat.START)
-                    binding.title.text = "News App"
+
                     true
                 }
 
                 R.id.settings -> {
                     pushFragment(SettingsFragment())
                     binding.drawer.closeDrawer(GravityCompat.START)
-                    binding.title.text = "Settings"
+
                     true
                 }
 

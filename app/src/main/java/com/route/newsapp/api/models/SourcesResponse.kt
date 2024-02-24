@@ -1,6 +1,8 @@
 package com.route.newsapp.api.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class SourcesResponse(
 
@@ -17,6 +19,7 @@ data class SourcesResponse(
 	val message: String? = null
 )
 
+@Parcelize
 data class Source(
 
 	@field:SerializedName("country")
@@ -39,4 +42,4 @@ data class Source(
 
 	@field:SerializedName("url")
 	val url: String? = null
-)
+):Parcelable

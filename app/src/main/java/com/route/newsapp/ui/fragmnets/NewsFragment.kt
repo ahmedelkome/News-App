@@ -1,19 +1,25 @@
 package com.route.newsapp.ui.fragmnets
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
+import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.gson.Gson
 import com.route.newsapp.api.ApiManager
+import com.route.newsapp.api.models.Article
 import com.route.newsapp.api.models.ArticlesResponse
 import com.route.newsapp.api.models.Source
 import com.route.newsapp.api.models.SourcesResponse
+import com.route.newsapp.constants.Constants
 import com.route.newsapp.databinding.FragmentNewsBinding
 import com.route.newsapp.ui.adapter.ArticlesAdapter
+import com.route.newsapp.ui.screen.DetailsActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,6 +42,46 @@ class NewsFragment : Fragment() , OnTabSelectedListener {
         loadSources()
         binding.tabLayout.addOnTabSelectedListener(this)
         binding.rvArticles.adapter = adapter
+        adapter.onArticleClick = object : ArticlesAdapter.onClickArticle{
+            override fun onitemclick(article:Article) {
+                val intent = Intent(requireActivity(),DetailsActivity::class.java)
+                intent.putExtra(Constants.ARTICLE_KEY,article)
+                startActivity(intent)
+            }
+
+        }
+        loadSearchArticles()
+    }
+
+    private fun loadSearchArticles() {
+        binding.search.setOnClickListener {
+            binding.title.isVisible =false
+            binding.searchView.isVisible = true
+            binding.searchView.setOnQueryTextListener(object : OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    ApiManager.getInstance().
+                    getArticles(ApiManager.API_KEY,"",query)
+                        .enqueue(object : Callback<ArticlesResponse>{
+                            override fun onResponse(
+                                call: Call<ArticlesResponse>,
+                                response: Response<ArticlesResponse>
+                            ) {
+                                adapter.updateArticles(response.body()?.articles)
+                            }
+
+                            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
+                            }
+
+                        })
+                   return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                   return true
+                }
+
+            })
+        }
     }
 
     private fun loadArticles(sourceId: String) {
