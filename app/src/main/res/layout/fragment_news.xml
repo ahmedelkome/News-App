@@ -15,6 +15,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@drawable/background_tabs"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/green"
+        app:tabRippleColor="@color/white"
+        android:layout_marginTop="8dp"
         app:tabMode="scrollable"
         app:tabPaddingEnd="10dp"
         app:tabPaddingStart="10dp" />
