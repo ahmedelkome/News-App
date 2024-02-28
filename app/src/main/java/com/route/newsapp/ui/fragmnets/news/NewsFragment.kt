@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.LabelVisibility
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -29,13 +31,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener {
+    lateinit var viewModelNews : NewsViewModel
     lateinit var binding: FragmentNewsBinding
-
     val adapter = ArticlesAdapter(listOf())
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        viewModelNews = ViewModelProvider(this)[NewsViewModel::class.java]
         binding = FragmentNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,8 +47,28 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
         super.onViewCreated(view, savedInstanceState)
         binding.tabLayout.addOnTabSelectedListener(this)
         binding.rvArticles.adapter = adapter
-        loadSources()
+        viewModelNews.loadSources(categoryId)
         initListenner()
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        viewModelNews.sourceListLiveData.observe(viewLifecycleOwner
+        ) {
+            showSources(it!!)
+        }
+
+        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner){
+            changeProgressVisibility(it)
+        }
+
+        viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                return@observe
+            }else
+                changeErrorVisibility(true,it)
+        }
+
     }
 
     private fun initListenner() {
@@ -59,7 +82,7 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
         binding.includeErrorBady.retry.setOnClickListener {
             changeErrorVisibility(false)
             changeProgressVisibility(true)
-            loadSources()
+            viewModelNews.loadSources(categoryId)
         }
     }
 
@@ -92,33 +115,33 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
 
     }
 
-    private fun loadSources() {
-        changeProgressVisibility(true)
-        ApiManager.getInstance().getSources(ApiManager.API_KEY,categoryId)
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        changeProgressVisibility(false)
-                        response.body()?.sources.let {
-                            showSources(it!!)
-                        }
-                    } else {
-                        changeProgressVisibility(false)
-                       val error = Gson().fromJson(response.errorBody()?.string(), SourcesResponse::class.java)
-                        changeErrorVisibility(true,"There is something wrong try again")
-                    }
-                }
-
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-                    changeProgressVisibility(false)
-                    changeErrorVisibility(true,"Check your connection with wifi or mobile data")
-                }
-
-            })
-    }
+//    private fun loadSources() {
+//        changeProgressVisibility(true)
+//        ApiManager.getInstance().getSources(ApiManager.API_KEY,categoryId)
+//            .enqueue(object : Callback<SourcesResponse> {
+//                override fun onResponse(
+//                    call: Call<SourcesResponse>,
+//                    response: Response<SourcesResponse>
+//                ) {
+//                    if (response.isSuccessful) {
+//                        changeProgressVisibility(false)
+//                        response.body()?.sources.let {
+//                            showSources(it!!)
+//                        }
+//                    } else {
+//                        changeProgressVisibility(false)
+//                       val error = Gson().fromJson(response.errorBody()?.string(), SourcesResponse::class.java)
+//                        changeErrorVisibility(true,"There is something wrong try again")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
+//                    changeProgressVisibility(false)
+//                    changeErrorVisibility(true,"Check your connection with wifi or mobile data")
+//                }
+//
+//            })
+//    }
 
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->

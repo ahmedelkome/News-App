@@ -42,15 +42,28 @@ android {
 
 dependencies {
 
+    val lifecycle_version = "2.7.0"
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     //Converter - Gson
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+
     implementation ("com.google.android.material:material:1.3.0-alpha03")
     implementation ("androidx.drawerlayout:drawerlayout:1.1.1")
     implementation ("com.google.android.material:material:1.2.0")
