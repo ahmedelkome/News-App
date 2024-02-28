@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/pattern"
-    tools:context=".ui.fragmnets.SettingsFragment">
+    tools:context=".ui.fragmnets.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/languages"

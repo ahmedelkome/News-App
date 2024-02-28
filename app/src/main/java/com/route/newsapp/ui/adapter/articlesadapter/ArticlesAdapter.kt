@@ -1,17 +1,16 @@
-package com.route.newsapp.ui.adapter
+package com.route.newsapp.ui.adapter.articlesadapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.route.newsapp.R
 import com.route.newsapp.api.models.Article
 import com.route.newsapp.databinding.ArticleItemBinding
 
 class ArticlesAdapter(var articles:List<Article?>?) : Adapter<ArticlesAdapter.ArticleViewHolder>() {
 
-    var onArticleClick:onClickArticle?=null
+    var onArticleClick: onClickArticle?=null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
 

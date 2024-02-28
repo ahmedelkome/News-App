@@ -1,4 +1,4 @@
-package com.route.newsapp.ui.fragmnets
+package com.route.newsapp.ui.fragmnets.settings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

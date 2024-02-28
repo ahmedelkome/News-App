@@ -3,4 +3,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#39A552</color>
+
+    //categories colors
+
+    <color name="red">#C91C22</color>
+    <color name="blue">#003E90</color>
+    <color name="pink">#ED1E79</color>
+
+    <color name="light_blue">#4882CF</color>
+    <color name="yellow">#F2D352</color>
+    <color name="deep_orange">#CF7E48</color>
+
 </resources>
