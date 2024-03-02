@@ -30,8 +30,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener {
-    lateinit var viewModelNews : NewsViewModel
+class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
+    lateinit var viewModelNews: NewsViewModel
     lateinit var binding: FragmentNewsBinding
     val adapter = ArticlesAdapter(listOf())
     override fun onCreateView(
@@ -53,20 +53,25 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     }
 
     private fun observeLiveData() {
-        viewModelNews.sourceListLiveData.observe(viewLifecycleOwner
+        viewModelNews.sourceListLiveData.observe(
+            viewLifecycleOwner
         ) {
             showSources(it!!)
         }
 
-        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner){
+        viewModelNews.articleListLiveData.observe(viewLifecycleOwner) {
+            adapter.updateArticles(it)
+        }
+
+        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner) {
             changeProgressVisibility(it)
         }
 
-        viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner){
-            if (it.isEmpty()){
+        viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
                 return@observe
-            }else
-                changeErrorVisibility(true,it)
+            } else
+                changeErrorVisibility(true, it)
         }
 
     }
@@ -87,33 +92,32 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     }
 
 
-
-    private fun loadArticles(sourceId: String) {
-        ApiManager.getInstance().getArticles(
-            ApiManager.API_KEY,
-            sourceId
-        ).enqueue(object : Callback<ArticlesResponse> {
-            override fun onResponse(
-                call: Call<ArticlesResponse>,
-                response: Response<ArticlesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    adapter.updateArticles(response.body()?.articles)
-
-                } else {
-                   val response= Gson()
-                       .fromJson(response.errorBody()?.string(),
-                       SourcesResponse::class.java)
-                }
-            }
-
-            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-
-            }
-
-        })
-
-    }
+//    private fun loadArticles(sourceId: String) {
+//        ApiManager.getInstance().getArticles(
+//            ApiManager.API_KEY,
+//            sourceId
+//        ).enqueue(object : Callback<ArticlesResponse> {
+//            override fun onResponse(
+//                call: Call<ArticlesResponse>,
+//                response: Response<ArticlesResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    adapter.updateArticles(response.body()?.articles)
+//
+//                } else {
+//                   val response= Gson()
+//                       .fromJson(response.errorBody()?.string(),
+//                       SourcesResponse::class.java)
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
+//
+//            }
+//
+//        })
+//
+//    }
 
 //    private fun loadSources() {
 //        changeProgressVisibility(true)
@@ -156,7 +160,7 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            loadArticles(it)
+            viewModelNews.loadArticles(it)
         }
     }
 
@@ -167,18 +171,18 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     override fun onTabReselected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            loadArticles(it)
+            viewModelNews.loadArticles(it)
         }
     }
 
-    fun changeErrorVisibility(isVisible:Boolean,message: String = ""){
+    fun changeErrorVisibility(isVisible: Boolean, message: String = "") {
         binding.includeErrorBady.errorBady.isVisible = isVisible
-        if (isVisible){
+        if (isVisible) {
             binding.includeErrorBady.errorMessage.text = message
         }
     }
 
-    fun changeProgressVisibility(isVisible:Boolean){
+    fun changeProgressVisibility(isVisible: Boolean) {
         binding.progressBar.isVisible = isVisible
     }
 }

@@ -6,8 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.gson.Gson
@@ -28,10 +31,12 @@ import retrofit2.Response
 class SearchFragment : Fragment() , OnTabSelectedListener {
     lateinit var binding: FragmentSearchBinding
     val adapter = ArticlesAdapter(listOf())
+    lateinit var searchViewModel : SearchFragmentViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        searchViewModel = ViewModelProvider(this).get(SearchFragmentViewModel::class.java)
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,9 +45,32 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         binding.tabLayoutSearch.addOnTabSelectedListener(this)
         binding.rvSearch.adapter = adapter
-        loadSources()
+        searchViewModel.loadSources()
+        observeLiveData()
         initListenner()
 
+
+    }
+
+    private fun observeLiveData() {
+        searchViewModel.sourceSearchListLiveData.observe(viewLifecycleOwner){
+            showSources(it!!)
+        }
+
+        searchViewModel.progressVisibilitySearchLiveData.observe(viewLifecycleOwner){
+            changeProgressVisibility(it)
+        }
+
+        searchViewModel.errorVisibilitySearchLiveData.observe(viewLifecycleOwner){
+            if (it.isEmpty()){
+                return@observe
+            }
+            changeErrorVisibility(true,it)
+        }
+
+        searchViewModel.articleSearchListLiveData.observe(viewLifecycleOwner){
+            adapter.updateArticles(it)
+        }
     }
 
     private fun initListenner() {
@@ -56,107 +84,21 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
         binding.includeErrorBady.retry.setOnClickListener {
             changeErrorVisibility(false)
             changeProgressVisibility(true)
-            loadSources()
+            searchViewModel.loadSources()
         }
-    }
-//    private fun loadArticles(sourceId: String) {
-//        ApiManager.getInstance().getArticles(
-//            ApiManager.API_KEY,
-//            sourceId
-//        ).enqueue(object : Callback<ArticlesResponse> {
-//            override fun onResponse(
-//                call: Call<ArticlesResponse>,
-//                response: Response<ArticlesResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    adapter.updateArticles(response.body()?.articles)
-//
-//                } else {
-//                    val response= Gson()
-//                        .fromJson(response.errorBody()?.string(),
-//                            SourcesResponse::class.java)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-//
-//            }
-//
-//        })
-//
-//    }
 
-    private fun loadSources() {
-        changeProgressVisibility(true)
-        ApiManager.getInstance().getSources(ApiManager.API_KEY)
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        changeProgressVisibility(false)
-                        response.body()?.sources.let {
-                            showSources(it!!)
-                        }
-                    } else {
-                        changeProgressVisibility(false)
-                        val error = Gson().fromJson(
-                            response.errorBody()?.string(),
-                            SourcesResponse::class.java
-                        )
-                        changeErrorVisibility(true, "There is something wrong try again")
-                    }
-                }
-
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-                    changeProgressVisibility(false)
-                    changeErrorVisibility(true, "Check your connection with wifi or mobile data")
-                }
-
-            })
-    }
-
-    private fun loadSearchArticles(sourceId: String) {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
-                var textSearch = query
-                ApiManager.getInstance().getArticles(ApiManager.API_KEY,sourceId,textSearch)
-                    .enqueue(object : Callback<ArticlesResponse> {
-                        override fun onResponse(
-                            call: Call<ArticlesResponse>,
-                            response: Response<ArticlesResponse>
-                        ) {
-                            adapter.updateArticles(response.body()?.articles)
-                        }
-
-                        override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-                        }
-
-                    })
+                searchViewModel.loadSearchArticles("",query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                var textSearch = newText
-                ApiManager.getInstance().getArticles(ApiManager.API_KEY,sourceId,textSearch)
-                    .enqueue(object : Callback<ArticlesResponse> {
-                        override fun onResponse(
-                            call: Call<ArticlesResponse>,
-                            response: Response<ArticlesResponse>
-                        ) {
-                            adapter.updateArticles(response.body()?.articles)
-                        }
-
-                        override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-                        }
-
-                    })
+                searchViewModel.loadSearchArticles("",newText)
                 return true
             }
 
         })
-
     }
 
     private fun showSources(sources: List<Source?>) {
@@ -172,7 +114,19 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            loadSearchArticles(it)
+            searchViewModel.loadSearchArticles(it)
+            binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    searchViewModel.loadSearchArticles(it,query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    searchViewModel.loadSearchArticles(it,newText)
+                    return true
+                }
+
+            })
         }
 
     }
@@ -184,7 +138,19 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {
             val source = tab?.tag as Source?
             source?.id?.let {
-                loadSearchArticles(it)
+                searchViewModel.loadSearchArticles(it)
+                binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        searchViewModel.loadSearchArticles(it,query)
+                        return true
+                    }
+
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        searchViewModel.loadSearchArticles(it,newText)
+                        return true
+                    }
+
+                })
             }
 
         }
