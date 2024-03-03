@@ -10,7 +10,7 @@ import retrofit2.create
 
 class ApiManager {
     companion object{
-        const val API_KEY = "82036a2aea05466abe15646e58ee6c0a"
+        const val API_KEY = "7d25484b644444b3b8c22a06770e5607"
         private var retrofit : Retrofit? = null
        private val logger = HttpLoggingInterceptor {
             Log.e("ApiManager", "Body -> $it") }

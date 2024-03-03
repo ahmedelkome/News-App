@@ -28,10 +28,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class SearchFragment : Fragment() , OnTabSelectedListener {
+class SearchFragment : Fragment(), OnTabSelectedListener {
     lateinit var binding: FragmentSearchBinding
     val adapter = ArticlesAdapter(listOf())
-    lateinit var searchViewModel : SearchFragmentViewModel
+    lateinit var searchViewModel: SearchFragmentViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,22 +53,22 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
     }
 
     private fun observeLiveData() {
-        searchViewModel.sourceSearchListLiveData.observe(viewLifecycleOwner){
+        searchViewModel.sourceSearchListLiveData.observe(viewLifecycleOwner) {
             showSources(it!!)
         }
 
-        searchViewModel.progressVisibilitySearchLiveData.observe(viewLifecycleOwner){
+        searchViewModel.progressVisibilitySearchLiveData.observe(viewLifecycleOwner) {
             changeProgressVisibility(it)
         }
 
-        searchViewModel.errorVisibilitySearchLiveData.observe(viewLifecycleOwner){
-            if (it.isEmpty()){
+        searchViewModel.errorVisibilitySearchLiveData.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
                 return@observe
             }
-            changeErrorVisibility(true,it)
+            changeErrorVisibility(true, it)
         }
 
-        searchViewModel.articleSearchListLiveData.observe(viewLifecycleOwner){
+        searchViewModel.articleSearchListLiveData.observe(viewLifecycleOwner) {
             adapter.updateArticles(it)
         }
     }
@@ -87,14 +87,14 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
             searchViewModel.loadSources()
         }
 
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                searchViewModel.loadSearchArticles("",query)
+                searchViewModel.loadSearchArticles("", query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                searchViewModel.loadSearchArticles("",newText)
+                searchViewModel.loadSearchArticles("", newText)
                 return true
             }
 
@@ -115,55 +115,31 @@ class SearchFragment : Fragment() , OnTabSelectedListener {
         val source = tab?.tag as Source?
         source?.id?.let {
             searchViewModel.loadSearchArticles(it)
-            binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    searchViewModel.loadSearchArticles(it,query)
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    searchViewModel.loadSearchArticles(it,newText)
-                    return true
-                }
-
-            })
         }
 
     }
 
-        override fun onTabUnselected(tab: TabLayout.Tab?) {
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
 
-        }
+    }
 
-        override fun onTabReselected(tab: TabLayout.Tab?) {
-            val source = tab?.tag as Source?
-            source?.id?.let {
-                searchViewModel.loadSearchArticles(it)
-                binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                    override fun onQueryTextSubmit(query: String): Boolean {
-                        searchViewModel.loadSearchArticles(it,query)
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String): Boolean {
-                        searchViewModel.loadSearchArticles(it,newText)
-                        return true
-                    }
-
-                })
-            }
-
-        }
-
-        fun changeErrorVisibility(isVisible: Boolean, message: String = "") {
-            binding.includeErrorBady.errorBady.isVisible = isVisible
-            if (isVisible) {
-                binding.includeErrorBady.errorMessage.text = message
-            }
-        }
-
-        fun changeProgressVisibility(isVisible: Boolean) {
-            binding.progressBar.isVisible = isVisible
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+        val source = tab?.tag as Source?
+        source?.id?.let {
+            searchViewModel.loadSearchArticles(it)
         }
 
     }
+
+    fun changeErrorVisibility(isVisible: Boolean, message: String = "") {
+        binding.includeErrorBady.errorBady.isVisible = isVisible
+        if (isVisible) {
+            binding.includeErrorBady.errorMessage.text = message
+        }
+    }
+
+    fun changeProgressVisibility(isVisible: Boolean) {
+        binding.progressBar.isVisible = isVisible
+    }
+
+}

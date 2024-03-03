@@ -91,62 +91,6 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
         }
     }
 
-
-//    private fun loadArticles(sourceId: String) {
-//        ApiManager.getInstance().getArticles(
-//            ApiManager.API_KEY,
-//            sourceId
-//        ).enqueue(object : Callback<ArticlesResponse> {
-//            override fun onResponse(
-//                call: Call<ArticlesResponse>,
-//                response: Response<ArticlesResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    adapter.updateArticles(response.body()?.articles)
-//
-//                } else {
-//                   val response= Gson()
-//                       .fromJson(response.errorBody()?.string(),
-//                       SourcesResponse::class.java)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-//
-//            }
-//
-//        })
-//
-//    }
-
-//    private fun loadSources() {
-//        changeProgressVisibility(true)
-//        ApiManager.getInstance().getSources(ApiManager.API_KEY,categoryId)
-//            .enqueue(object : Callback<SourcesResponse> {
-//                override fun onResponse(
-//                    call: Call<SourcesResponse>,
-//                    response: Response<SourcesResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        changeProgressVisibility(false)
-//                        response.body()?.sources.let {
-//                            showSources(it!!)
-//                        }
-//                    } else {
-//                        changeProgressVisibility(false)
-//                       val error = Gson().fromJson(response.errorBody()?.string(), SourcesResponse::class.java)
-//                        changeErrorVisibility(true,"There is something wrong try again")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-//                    changeProgressVisibility(false)
-//                    changeErrorVisibility(true,"Check your connection with wifi or mobile data")
-//                }
-//
-//            })
-//    }
-
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->
             val tab = binding.tabLayout.newTab()
