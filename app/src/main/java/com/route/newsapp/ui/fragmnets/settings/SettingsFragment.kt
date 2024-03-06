@@ -16,9 +16,9 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSettingsBinding.inflate(inflater,container,false)
-        // Inflate the layout for this fragment
+    ): View {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -29,7 +29,7 @@ class SettingsFragment : Fragment() {
 
     private fun selectLanguage() {
         val languages = resources.getStringArray(R.array.languages)
-        val adapter = ArrayAdapter(requireActivity(),R.layout.text_language,languages)
+        val adapter = ArrayAdapter(requireActivity(), R.layout.text_language, languages)
         binding.selectLanguage.setAdapter(adapter)
     }
 }

@@ -37,35 +37,6 @@ class NewsViewModel : ViewModel() {
             }
         }
     }
-//        ApiManager.getInstance().getSources(ApiManager.API_KEY, categoryID)
-//            .enqueue(object : Callback<SourcesResponse> {
-//                override fun onResponse(
-//                    call: Call<SourcesResponse>,
-//                    response: Response<SourcesResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//
-//                        progressVisibilityLiveData.value = false
-//                        response.body()?.sources.let {
-//                            sourceListLiveData.value = it
-//
-//                        }
-//                    } else {
-//                        progressVisibilityLiveData.value = false
-//
-//                        errorVisibilityLiveData.value = "There is something wrong try again"
-//
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-//
-//                    progressVisibilityLiveData.value = false
-//
-//                    errorVisibilityLiveData.value = "Check your connection with wifi or mobile data"
-//                }
-//
-//            })
 
     fun loadArticles(sourceId: String) {
 
@@ -78,34 +49,6 @@ class NewsViewModel : ViewModel() {
                 errorVisibilityLiveData.value = e.localizedMessage
             }
         }
-
-//        ApiManager.getInstance().getArticles(
-//            ApiManager.API_KEY,
-//            sourceId
-//        ).enqueue(object : Callback<ArticlesResponse> {
-//            override fun onResponse(
-//                call: Call<ArticlesResponse>,
-//                response: Response<ArticlesResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//
-//                    articleListLiveData.value = response.body()?.articles
-//
-//                } else {
-//
-//                    errorVisibilityLiveData.value = "There is something wrong try again"
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-//                progressVisibilityLiveData.value = false
-//
-//                errorVisibilityLiveData.value = "Check your connection with wifi or mobile data"
-//            }
-//
-//        })
-//
-//    }
 
     }
 }

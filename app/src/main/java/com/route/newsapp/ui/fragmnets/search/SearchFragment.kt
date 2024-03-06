@@ -48,8 +48,6 @@ class SearchFragment : Fragment(), OnTabSelectedListener {
         searchViewModel.loadSources()
         observeLiveData()
         initListenner()
-
-
     }
 
     private fun observeLiveData() {

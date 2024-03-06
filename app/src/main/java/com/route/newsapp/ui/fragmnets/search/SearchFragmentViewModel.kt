@@ -38,36 +38,6 @@ class SearchFragmentViewModel : ViewModel() {
             }
         }
     }
-//        progressVisibilitySearchLiveData.value = true
-//        ApiManager.getInstance().getSources(ApiManager.API_KEY)
-//            .enqueue(object : Callback<SourcesResponse> {
-//                override fun onResponse(
-//                    call: Call<SourcesResponse>,
-//                    response: Response<SourcesResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//
-//                        progressVisibilitySearchLiveData.value = false
-//
-//                        response.body()?.sources.let {
-//
-//                            sourceSearchListLiveData.value = it
-//                        }
-//                    } else {
-//                        progressVisibilitySearchLiveData.value = false
-//
-//                        errorVisibilitySearchLiveData.value = "There is something wrong try again"
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-//                    progressVisibilitySearchLiveData.value = false
-//                    errorVisibilitySearchLiveData.value =
-//                        "Check your connection with wifi or mobile data"
-//                }
-//
-//            })
-//    }
 
     fun loadSearchArticles(sourceId: String, searchKey: String = "") {
         viewModelScope.launch {
@@ -81,35 +51,3 @@ class SearchFragmentViewModel : ViewModel() {
         }
     }
 }
-//        ApiManager.getInstance().getArticles(ApiManager.API_KEY, sourceId, searchKey)
-//            .enqueue(object : Callback<ArticlesResponse> {
-//                override fun onResponse(
-//                    call: Call<ArticlesResponse>,
-//                    response: Response<ArticlesResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//
-//                        progressVisibilitySearchLiveData.value = false
-//                        response.body()?.articles.let {
-//
-//                            articleSearchListLiveData.value = it
-//                        }
-//                    } else {
-//
-//                        progressVisibilitySearchLiveData.value = false
-//
-//                        errorVisibilitySearchLiveData.value = "There is something wrong try again"
-//                    }
-//
-//                }
-//
-//                override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-//                    progressVisibilitySearchLiveData.value = false
-//
-//                    errorVisibilitySearchLiveData.value =
-//                        "Check your connection with wifi or mobile data"
-//                }
-//
-//            })
-//    }
-//}

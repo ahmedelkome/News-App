@@ -8,14 +8,15 @@ import com.bumptech.glide.Glide
 import com.route.newsapp.api.models.Article
 import com.route.newsapp.databinding.ArticleItemBinding
 
-class ArticlesAdapter(var articles:List<Article?>?) : Adapter<ArticlesAdapter.ArticleViewHolder>() {
+class ArticlesAdapter(var articles: List<Article?>?) :
+    Adapter<ArticlesAdapter.ArticleViewHolder>() {
 
-    var onArticleClick: onClickArticle?=null
+    var onArticleClick: onClickArticle? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
 
         val binding = ArticleItemBinding
-            .inflate(LayoutInflater.from(parent.context),parent,false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return ArticleViewHolder(binding)
     }
 
@@ -23,26 +24,29 @@ class ArticlesAdapter(var articles:List<Article?>?) : Adapter<ArticlesAdapter.Ar
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = articles?.get(position)
-        holder.binding.apply {
-            sourceTv.text = article?.source?.name
-            articleTitle.text = article?.title
-            articleTime.text = article?.publishedAt
-            Glide.with(root).load(article?.urlToImage).into(holder.binding.articleImage)
-            holder.binding.root.setOnClickListener {
-                onArticleClick?.onitemclick(article!!)
-            }
+        article?.let {
+            holder.bind(article)
         }
     }
 
-    fun updateArticles(newList:List<Article?>?){
+    fun updateArticles(newList: List<Article?>?) {
         articles = newList
         notifyDataSetChanged()
     }
+
     interface onClickArticle {
-        fun onitemclick(article:Article)
+        fun onitemclick(article: Article)
     }
 
-    class ArticleViewHolder(val binding: ArticleItemBinding) : ViewHolder(binding.root){
+    inner class ArticleViewHolder(val binding: ArticleItemBinding) : ViewHolder(binding.root) {
 
+        fun bind(article: Article) {
+            binding.apply {
+                binding.article = article
+                articleView.setOnClickListener {
+                    onArticleClick?.onitemclick(article!!)
+                }
+            }
+        }
     }
 }

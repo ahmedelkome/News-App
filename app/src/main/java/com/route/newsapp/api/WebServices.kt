@@ -1,6 +1,7 @@
-package com.route.newsapp.api.models
+package com.route.newsapp.api
 
-import retrofit2.Call
+import com.route.newsapp.api.models.ArticlesResponse
+import com.route.newsapp.api.models.SourcesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

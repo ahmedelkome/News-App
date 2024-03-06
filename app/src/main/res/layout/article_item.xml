@@ -1,45 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/article_view"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="15dp"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/article_image"
-        android:layout_width="wrap_content"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-        android:layout_height="201dp"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        tools:src="@tools:sample/backgrounds/scenic" />
+    <data>
+        <variable
+            name="article"
+            type="com.route.newsapp.api.models.Article" />
+    </data>
 
-    <TextView
-        android:id="@+id/source_tv"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="8dp"
-        tools:text="ABC"
-        />
-    <TextView
-        android:id="@+id/article_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Alahly"
-        android:textStyle="bold"
-        android:layout_marginStart="8dp"
-        />
+        android:id="@+id/article_view"
+        android:orientation="vertical"
+        android:padding="15dp">
 
-    <TextView
-        android:id="@+id/article_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        tools:text="3 hours ago"
-        />
-</LinearLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/article_image"
+            android:layout_width="wrap_content"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+            android:layout_height="201dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            url="@{article.urlToImage}"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <TextView
+            android:id="@+id/source_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            android:text="@{article.source.name}" />
+
+        <TextView
+            android:id="@+id/article_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{article.title}"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/article_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@{article.publishedAt}" />
+    </LinearLayout>
+</layout>

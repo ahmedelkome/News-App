@@ -47,6 +47,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
         super.onViewCreated(view, savedInstanceState)
         binding.tabLayout.addOnTabSelectedListener(this)
         binding.rvArticles.adapter = adapter
+        binding.viewModel = viewModelNews
         viewModelNews.loadSources(categoryId)
         initListenner()
         observeLiveData()
@@ -63,7 +64,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
             adapter.updateArticles(it)
         }
 
-        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner) {
+        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner){
             changeProgressVisibility(it)
         }
 
