@@ -20,33 +20,36 @@ class NewsViewModel : ViewModel() {
 
     val articleListLiveData: MutableLiveData<List<Article?>?> = MutableLiveData(listOf())
 
-    val progressVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
+    val progressVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(true)
 
     val errorVisibilityLiveData: MutableLiveData<String> = MutableLiveData("")
 
     fun loadSources(categoryID: String) {
-        progressVisibilityLiveData.value = true
         viewModelScope.launch {
+            progressVisibilityLiveData.value = true
             try {
                 val response = ApiManager.getInstance()
                     .getSources(ApiManager.API_KEY, categoryID)
                 progressVisibilityLiveData.value = false
                 sourceListLiveData.value = response.sources
             } catch (e: Exception) {
-                errorVisibilityLiveData.value = e.localizedMessage
+                progressVisibilityLiveData.value = false
+                errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
             }
         }
     }
 
     fun loadArticles(sourceId: String) {
-
         viewModelScope.launch {
+            progressVisibilityLiveData.value = true
             try {
                 val response = ApiManager.getInstance()
                     .getArticles(ApiManager.API_KEY, sourceId)
+                progressVisibilityLiveData.value = false
                 articleListLiveData.value = response.articles
             } catch (e: Exception) {
-                errorVisibilityLiveData.value = e.localizedMessage
+                progressVisibilityLiveData.value = false
+                errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
             }
         }
 
