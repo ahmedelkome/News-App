@@ -1,10 +1,9 @@
-package com.route.newsapp.repo
+package com.route.newsapp.repo.data_sources.remote_data_source
 
 import com.route.newsapp.api.models.Article
 import com.route.newsapp.api.models.Source
-import retrofit2.http.Query
 
-interface NewsRepository {
+interface RemoteDataSource {
 
     suspend fun loadSources(apiKey: String, category: String = ""): List<Source?>?
 

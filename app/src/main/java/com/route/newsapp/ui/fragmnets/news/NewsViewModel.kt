@@ -9,6 +9,11 @@ import com.route.newsapp.api.models.Article
 import com.route.newsapp.api.models.ArticlesResponse
 import com.route.newsapp.api.models.Source
 import com.route.newsapp.api.models.SourcesResponse
+import com.route.newsapp.repo.NewsRepository
+import com.route.newsapp.repo.NewsRepositoryImpl
+import com.route.newsapp.repo.data_sources.local_data_source.LocalDataSource
+import com.route.newsapp.repo.data_sources.local_data_source.LocalDataSourceImpl
+import com.route.newsapp.repo.data_sources.remote_data_source.RemoteDataSourceImpl
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,6 +21,10 @@ import retrofit2.Response
 
 class NewsViewModel : ViewModel() {
 
+    val newsRepo : NewsRepository = NewsRepositoryImpl(
+        RemoteDataSourceImpl(),
+        LocalDataSourceImpl()
+    )
     val sourceListLiveData: MutableLiveData<List<Source?>?> = MutableLiveData(listOf())
 
     val articleListLiveData: MutableLiveData<List<Article?>?> = MutableLiveData(listOf())
@@ -28,10 +37,10 @@ class NewsViewModel : ViewModel() {
         viewModelScope.launch {
             progressVisibilityLiveData.value = true
             try {
-                val response = ApiManager.getInstance()
-                    .getSources(ApiManager.API_KEY, categoryID)
+                val sourceList =
+                    newsRepo.loadSources(ApiManager.API_KEY,categoryID)
                 progressVisibilityLiveData.value = false
-                sourceListLiveData.value = response.sources
+                sourceListLiveData.value = sourceList
             } catch (e: Exception) {
                 progressVisibilityLiveData.value = false
                 errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
@@ -43,10 +52,10 @@ class NewsViewModel : ViewModel() {
         viewModelScope.launch {
             progressVisibilityLiveData.value = true
             try {
-                val response = ApiManager.getInstance()
-                    .getArticles(ApiManager.API_KEY, sourceId)
+                val articleList =
+                    newsRepo.loadArticles(ApiManager.API_KEY,sourceId)
                 progressVisibilityLiveData.value = false
-                articleListLiveData.value = response.articles
+                articleListLiveData.value = articleList
             } catch (e: Exception) {
                 progressVisibilityLiveData.value = false
                 errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
