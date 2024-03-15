@@ -43,7 +43,6 @@ class ArticlesAdapter(var articles: List<Article?>?) :
         fun bind(article: Article) {
             binding.apply {
                 binding.article = article
-//                binding.onclickArticle = onArticleClick
                 articleView.setOnClickListener {
                     onArticleClick?.onitemclick(article!!)
                 }

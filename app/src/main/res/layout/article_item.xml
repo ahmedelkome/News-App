@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.R"/>
         <variable
             name="article"
             type="com.route.newsapp.api.models.Article" />
@@ -24,7 +23,6 @@
             android:layout_height="201dp"
             android:layout_gravity="center"
             android:scaleType="fitXY"
-            placeholder="@{@drawable/loading_spinner}"
             url="@{article.urlToImage}"
             tools:src="@tools:sample/backgrounds/scenic" />
 
