@@ -24,6 +24,7 @@
             android:layout_gravity="center"
             android:scaleType="fitXY"
             url="@{article.urlToImage}"
+            placeholder="@{@drawable/loading_spinner}"
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView

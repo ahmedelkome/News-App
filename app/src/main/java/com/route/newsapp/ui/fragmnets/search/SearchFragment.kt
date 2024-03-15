@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -48,6 +50,16 @@ class SearchFragment : Fragment(), OnTabSelectedListener {
         searchViewModel.loadSources()
         observeLiveData()
         initListenner()
+    }
+
+    private fun tabMargin(tab: TabLayout.Tab?) {
+        val tabs = binding.tabLayoutSearch.getChildAt(0) as ViewGroup
+        tabs.forEach {tab->
+            val layoutParams = tab.layoutParams as LinearLayout.LayoutParams
+            layoutParams.marginStart = 20
+            tab.layoutParams = layoutParams
+            binding.tabLayoutSearch.requestLayout()
+        }
     }
 
     private fun observeLiveData() {
@@ -102,6 +114,7 @@ class SearchFragment : Fragment(), OnTabSelectedListener {
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->
             val tab = binding.tabLayoutSearch.newTab()
+            tabMargin(tab)
             tab.text = source?.name
             binding.tabLayoutSearch.addTab(tab)
             tab.tag = source

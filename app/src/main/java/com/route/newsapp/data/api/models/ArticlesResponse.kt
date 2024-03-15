@@ -1,11 +1,7 @@
 package com.route.newsapp.data.api.models
 
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.SourceTypeConverter
+
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -26,7 +22,7 @@ data class ArticlesResponse(
     val message: String? = null
 )
 
-@Entity
+
 @Parcelize
 data class Article(
 
@@ -36,26 +32,23 @@ data class Article(
     @field:SerializedName("author")
     val author: String? = null,
 
-    @ColumnInfo
+
     @field:SerializedName("urlToImage")
     val urlToImage: String? = null,
 
-    @ColumnInfo
+
     @field:SerializedName("description")
     val description: String? = null,
 
 
-    @PrimaryKey
-    @TypeConverters(SourceTypeConverter::class)
-    @ColumnInfo
     @field:SerializedName("source")
-    val source: Source,
+    val source: Source? = null,
 
-    @ColumnInfo
+
     @field:SerializedName("title")
     val title: String? = null,
 
-    @ColumnInfo
+
     @field:SerializedName("url")
     val url: String? = null,
 

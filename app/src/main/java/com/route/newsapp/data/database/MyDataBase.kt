@@ -4,16 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.SourceTypeConverter
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
 
-@TypeConverters(SourceTypeConverter::class)
-@Database(entities = [Source::class, Article::class], version = 1, exportSchema = false)
+@Database(entities = [Source::class], version = 1, exportSchema = false)
 abstract class MyDataBase : RoomDatabase() {
     abstract fun getSourceDao(): SourceDao
-    abstract fun getArticleDao(): ArticlesDao
 
     companion object {
         private var database: MyDataBase? = null

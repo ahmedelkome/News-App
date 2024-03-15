@@ -19,7 +19,6 @@ class LocalDataSourceImpl(val database: MyDataBase) : LocalDataSource {
     }
 
     override suspend fun saveArticles(articleList: List<Article?>) {
-        val nonNullArticlesList = articleList.filterNotNull()
-        database.getArticleDao().addArticles(nonNullArticlesList)
+
     }
 }

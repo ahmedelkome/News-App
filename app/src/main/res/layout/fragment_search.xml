@@ -35,7 +35,9 @@
             app:tabBackground="@drawable/background_tabs"
             app:tabSelectedTextColor="@color/white"
             app:tabTextColor="@color/green"
+            android:visibility="gone"
             app:tabMode="scrollable"
+            app:tabIndicator="@android:color/transparent"
             app:tabPaddingEnd="10dp"
             app:tabPaddingStart="10dp" />
 
