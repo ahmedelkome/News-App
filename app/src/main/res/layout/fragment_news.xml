@@ -29,8 +29,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tabBackground="@drawable/background_tabs"
             app:tabMode="scrollable"
-            app:tabPaddingEnd="10dp"
-            app:tabPaddingStart="10dp"
+            app:tabIndicator="@android:color/transparent"
             app:tabRippleColor="@color/white"
             app:tabSelectedTextColor="@color/white"
             app:tabTextColor="@color/green" />

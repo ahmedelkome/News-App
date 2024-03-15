@@ -6,7 +6,7 @@
     <data>
         <variable
             name="article"
-            type="com.route.newsapp.api.models.Article" />
+            type="com.route.newsapp.data.api.models.Article" />
     </data>
 
     <LinearLayout

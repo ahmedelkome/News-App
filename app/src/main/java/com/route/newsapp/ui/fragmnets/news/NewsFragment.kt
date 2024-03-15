@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TableLayout
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,11 +20,11 @@ import com.google.android.material.tabs.TabLayout.LabelVisibility
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.gson.Gson
 import com.route.newsapp.R
-import com.route.newsapp.api.ApiManager
-import com.route.newsapp.api.models.Article
-import com.route.newsapp.api.models.ArticlesResponse
-import com.route.newsapp.api.models.Source
-import com.route.newsapp.api.models.SourcesResponse
+import com.route.newsapp.data.api.ApiManager
+import com.route.newsapp.data.api.models.Article
+import com.route.newsapp.data.api.models.ArticlesResponse
+import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourcesResponse
 import com.route.newsapp.constants.Constants
 import com.route.newsapp.databinding.FragmentNewsBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
@@ -45,12 +48,23 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
         binding.tabLayout.addOnTabSelectedListener(this)
         binding.rvArticles.adapter = adapter
         binding.viewModel = viewModelNews
         viewModelNews.loadSources(categoryId)
         initListenner()
         observeLiveData()
+    }
+
+    private fun tabMargin(tab: TabLayout.Tab?) {
+        val tabs = binding.tabLayout.getChildAt(0) as ViewGroup
+        tabs.forEach {tab->
+            val layoutParams = tab.layoutParams as LinearLayout.LayoutParams
+            layoutParams.marginStart = 20
+            tab.layoutParams = layoutParams
+            binding.tabLayout.requestLayout()
+        }
     }
 
     private fun observeLiveData() {
@@ -62,10 +76,6 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
 
         viewModelNews.articleListLiveData.observe(viewLifecycleOwner) {
             adapter.updateArticles(it)
-        }
-
-        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner){
-            changeProgressVisibility(it)
         }
 
         viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner) {
@@ -95,6 +105,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->
             val tab = binding.tabLayout.newTab()
+            tabMargin(tab)
             tab.text = source?.name
             binding.tabLayout.addTab(tab)
             tab.tag = source

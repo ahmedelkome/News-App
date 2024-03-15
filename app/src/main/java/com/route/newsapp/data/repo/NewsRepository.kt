@@ -1,7 +1,7 @@
-package com.route.newsapp.repo
+package com.route.newsapp.data.repo
 
-import com.route.newsapp.api.models.Article
-import com.route.newsapp.api.models.Source
+import com.route.newsapp.data.api.models.Article
+import com.route.newsapp.data.api.models.Source
 import retrofit2.http.Query
 
 interface NewsRepository {

@@ -10,7 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.route.newsapp.R
-import com.route.newsapp.api.models.Article
+import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.constants.Constants
 import com.route.newsapp.databinding.ActivityDetailsBinding
 

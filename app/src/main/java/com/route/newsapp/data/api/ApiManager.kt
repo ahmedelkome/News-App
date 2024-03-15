@@ -1,4 +1,4 @@
-package com.route.newsapp.api
+package com.route.newsapp.data.api
 
 import android.util.Log
 import okhttp3.OkHttpClient

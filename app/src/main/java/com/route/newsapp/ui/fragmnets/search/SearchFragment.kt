@@ -14,11 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.gson.Gson
-import com.route.newsapp.api.ApiManager
-import com.route.newsapp.api.models.Article
-import com.route.newsapp.api.models.ArticlesResponse
-import com.route.newsapp.api.models.Source
-import com.route.newsapp.api.models.SourcesResponse
+import com.route.newsapp.data.api.ApiManager
+import com.route.newsapp.data.api.models.Article
+import com.route.newsapp.data.api.models.ArticlesResponse
+import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourcesResponse
 import com.route.newsapp.constants.Constants
 import com.route.newsapp.databinding.FragmentSearchBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
