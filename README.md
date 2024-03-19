@@ -6,12 +6,12 @@
 # 💡 Preview
 
 <p align="center">
-<img src="image_1.jpg" alt="image_1" width="200" height="400">
-<img src="image_2.jpg" alt="image_2)" width="200" height="400">
-<img src="image_3.jpg" alt="image_3" width="200" height="400">
-<img src="image_4.jpg" alt="image_4" width="200" height="400">
-<img src="image_5.jpg" alt="image_5" width="200" height="400">
-<img src="image_6.jpg" alt="image_6" width="200" height="400">
-<img src="image_7.jpg" alt="image_7" width="200" height="400">
+<img src="image_1.png" alt="image_1" width="200" height="400">
+<img src="image_2.png" alt="image_2)" width="200" height="400">
+<img src="image_3.png" alt="image_3" width="200" height="400">
+<img src="image_4.png" alt="image_4" width="200" height="400">
+<img src="image_5.png" alt="image_5" width="200" height="400">
+<img src="image_6.png" alt="image_6" width="200" height="400">
+<img src="image_7.png" alt="image_7" width="200" height="400">
 
 </p>
