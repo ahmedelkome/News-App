@@ -1,37 +1,19 @@
 package com.route.newsapp.ui.fragmnets.news
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TableLayout
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.LabelVisibility
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.gson.Gson
-import com.route.newsapp.R
-import com.route.newsapp.data.api.ApiManager
-import com.route.newsapp.data.api.models.Article
-import com.route.newsapp.data.api.models.ArticlesResponse
 import com.route.newsapp.data.api.models.Source
-import com.route.newsapp.data.api.models.SourcesResponse
-import com.route.newsapp.constants.Constants
 import com.route.newsapp.databinding.FragmentNewsBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
-import com.route.newsapp.ui.screen.DetailsActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
     lateinit var viewModelNews: NewsViewModel
@@ -53,7 +35,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
         binding.rvArticles.adapter = adapter
         binding.viewModel = viewModelNews
         viewModelNews.loadSources(categoryId)
-        initListenner()
+//        initListenner()
         observeLiveData()
     }
 
@@ -87,20 +69,20 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
 
     }
 
-    private fun initListenner() {
-        adapter.onArticleClick = object : ArticlesAdapter.onClickArticle {
-            override fun onitemclick(article: Article) {
-                val intent = Intent(requireActivity(), DetailsActivity::class.java)
-                intent.putExtra(Constants.ARTICLE_KEY, article)
-                startActivity(intent)
-            }
-        }
-        binding.includeErrorBady.retry.setOnClickListener {
-            changeErrorVisibility(false)
-            changeProgressVisibility(true)
-            viewModelNews.loadSources(categoryId)
-        }
-    }
+//    private fun initListenner() {
+//        adapter.onArticleClick = object : ArticlesAdapter.onClickArticle {
+//            override fun onitemclick(article: Article) {
+//                val intent = Intent(requireActivity(), DetailsActivity::class.java)
+//                intent.putExtra(Constants.ARTICLE_KEY, article)
+//                startActivity(intent)
+//            }
+//        }
+//        binding.includeErrorBady.retry.setOnClickListener {
+//            changeErrorVisibility(false)
+//            changeProgressVisibility(true)
+//            viewModelNews.loadSources(categoryId)
+//        }
+//    }
 
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->
@@ -127,6 +109,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
     override fun onTabReselected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
+
             viewModelNews.loadArticles(it)
         }
     }

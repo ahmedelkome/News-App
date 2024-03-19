@@ -7,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 
 import com.route.newsapp.data.api.ApiManager
 import com.route.newsapp.data.api.models.Article
-import com.route.newsapp.data.api.models.ArticlesResponse
 import com.route.newsapp.data.api.models.Source
-import com.route.newsapp.data.api.models.SourcesResponse
 import com.route.newsapp.data.database.MyDataBase
 import com.route.newsapp.data.repo.NewsRepository
 import com.route.newsapp.data.repo.NewsRepositoryImpl
@@ -21,7 +19,7 @@ import kotlinx.coroutines.launch
 class SearchFragmentViewModel : ViewModel() {
 
 
-    val newsSearchRepo : NewsRepository = NewsRepositoryImpl(
+    val newsSearchRepo: NewsRepository = NewsRepositoryImpl(
         RemoteDataSourceImpl(),
         LocalDataSourceImpl(MyDataBase.getInstance())
     )
@@ -38,9 +36,9 @@ class SearchFragmentViewModel : ViewModel() {
         progressVisibilitySearchLiveData.value = true
         viewModelScope.launch {
             try {
-                val response = ApiManager.getInstance().getSources(ApiManager.API_KEY)
+                val response = newsSearchRepo.loadSources(ApiManager.API_KEY)
                 progressVisibilitySearchLiveData.value = false
-                sourceSearchListLiveData.value = response.sources
+                sourceSearchListLiveData.value = response
             } catch (e: Exception) {
                 progressVisibilitySearchLiveData.value = false
                 errorVisibilitySearchLiveData.value = e.localizedMessage
@@ -48,12 +46,11 @@ class SearchFragmentViewModel : ViewModel() {
         }
     }
 
-    fun loadSearchArticles(sourceId: String, searchKey: String = "") {
+    fun loadSearchArticles(source:String="",search:String="") {
         viewModelScope.launch {
             try {
-                val response = ApiManager.getInstance()
-                    .getArticles(ApiManager.API_KEY, sourceId, searchKey)
-                articleSearchListLiveData.value = response.articles
+                val response = newsSearchRepo.loadArticles(ApiManager.API_KEY,source )
+                articleSearchListLiveData.value = response
             } catch (e: Exception) {
                 errorVisibilitySearchLiveData.value = e.localizedMessage
             }

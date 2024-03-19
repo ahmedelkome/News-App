@@ -7,27 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.SearchView
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.gson.Gson
-import com.route.newsapp.data.api.ApiManager
-import com.route.newsapp.data.api.models.Article
-import com.route.newsapp.data.api.models.ArticlesResponse
 import com.route.newsapp.data.api.models.Source
-import com.route.newsapp.data.api.models.SourcesResponse
 import com.route.newsapp.constants.Constants
+import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.databinding.FragmentSearchBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
 import com.route.newsapp.ui.screen.DetailsActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SearchFragment : Fragment(), OnTabSelectedListener {

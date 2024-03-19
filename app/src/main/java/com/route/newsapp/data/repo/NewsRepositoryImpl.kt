@@ -7,30 +7,35 @@ import com.route.newsapp.data.repo.data_sources.local_data_source.LocalDataSourc
 import com.route.newsapp.data.repo.data_sources.remote_data_source.RemoteDataSource
 
 
-class NewsRepositoryImpl (val remoteDataSource: RemoteDataSource,
-                          val localDataSource: LocalDataSource
-)
-    : NewsRepository {
+class NewsRepositoryImpl(
+    val remoteDataSource: RemoteDataSource,
+    val localDataSource: LocalDataSource
+) : NewsRepository {
     override suspend fun loadSources(apiKey: String, category: String): List<Source?>? {
-        if (ConnectivityChecker.isNetworkAvailable()){
-            val response = remoteDataSource.loadSources(apiKey,category)
-            val nonNullList =response?.filterNotNull()
+        if (ConnectivityChecker.isNetworkAvailable()) {
+            val response = remoteDataSource.loadSources(apiKey, category)
+            val nonNullList = response?.filterNotNull()
+            localDataSource.deleteSource(category)
             localDataSource.saveSources(nonNullList!!)
             return response
-        }else{
+        } else {
             return localDataSource.loadSources(category)
         }
     }
 
     override suspend fun loadArticles(
         apiKey: String,
-        sourceId: String,
-        searchKey: String
+        source:String,
+        search:String
     ): List<Article?>? {
-        if (ConnectivityChecker.isNetworkAvailable()){
-            return remoteDataSource.loadArticles(apiKey,sourceId,searchKey)
-        }else{
-            return localDataSource.loadArticles(sourceId,searchKey)
+        if (ConnectivityChecker.isNetworkAvailable()) {
+            val response = remoteDataSource.loadArticles(apiKey, source)
+            val nonNullArticle = response?.filterNotNull()
+            localDataSource.deleteArticle(source)
+            localDataSource.saveArticles(nonNullArticle!!)
+            return response
+        } else {
+            return localDataSource.loadArticles(source)
         }
     }
 }

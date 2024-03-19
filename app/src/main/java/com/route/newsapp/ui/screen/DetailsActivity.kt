@@ -5,13 +5,12 @@ import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.route.newsapp.R
-import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.constants.Constants
+import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.databinding.ActivityDetailsBinding
 
 class DetailsActivity : AppCompatActivity() {

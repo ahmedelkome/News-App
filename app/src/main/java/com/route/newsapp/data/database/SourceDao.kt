@@ -2,13 +2,14 @@ package com.route.newsapp.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.route.newsapp.data.api.models.Source
 
 @Dao
 interface SourceDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
    suspend fun addSources(sourcesList : List<Source>)
 
     @Query("delete from source where category =:category")
