@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.route.newsapp.R
 import com.route.newsapp.databinding.ActivityHomeBinding
@@ -17,10 +18,10 @@ import com.route.newsapp.ui.fragmnets.settings.SettingsFragment
 
 class HomeActivity : AppCompatActivity() {
     lateinit var binding: ActivityHomeBinding
-    lateinit var actionBarDrawerToggle : ActionBarDrawerToggle
-     lateinit var categoryFragment : CategoriesFragment
+    lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    lateinit var categoryFragment: CategoriesFragment
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initClickedInCategory()
@@ -37,7 +38,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSearchIcon(isVisible:Boolean) {
+    private fun showSearchIcon(isVisible: Boolean) {
         binding.search.isVisible = isVisible
     }
 
@@ -54,8 +55,8 @@ class HomeActivity : AppCompatActivity() {
     private fun showIconDrawer() {
         setSupportActionBar(binding.toolbar)
         actionBarDrawerToggle =
-            ActionBarDrawerToggle(this, binding.root, R.string.nav_open, R.string.nav_close);
-        binding.root.addDrawerListener(actionBarDrawerToggle);
+            ActionBarDrawerToggle(this, binding.drawer, R.string.nav_open, R.string.nav_close);
+        binding.drawer.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
     }
@@ -65,7 +66,6 @@ class HomeActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(item)
     }
-
 
 
     private fun selectNavigateItems() {
@@ -92,9 +92,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun pushFragment(fragment:Fragment) {
+    private fun pushFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container,fragment)
+            .replace(R.id.fragment_container, fragment)
             .addToBackStack("")
             .commit()
     }

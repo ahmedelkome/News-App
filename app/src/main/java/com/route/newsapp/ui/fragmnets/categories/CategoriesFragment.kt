@@ -10,15 +10,15 @@ import com.route.newsapp.databinding.FragmentCategoriesBinding
 import com.route.newsapp.model.Category
 import com.route.newsapp.ui.adapter.categoriesadapter.CategoryAdapter
 
-class CategoriesFragment (val onCategoryClick:(category:Category) -> Unit): Fragment() {
+class CategoriesFragment(val onCategoryClick: (category: Category) -> Unit) : Fragment() {
     lateinit var binding: FragmentCategoriesBinding
-    lateinit var adapter : CategoryAdapter
+    lateinit var adapter: CategoryAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCategoriesBinding.inflate(inflater,container,false)
+        binding = FragmentCategoriesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -28,7 +28,7 @@ class CategoriesFragment (val onCategoryClick:(category:Category) -> Unit): Frag
     }
 
     private fun initRecycler() {
-        adapter = CategoryAdapter(Category.categories,onCategoryClick)
+        adapter = CategoryAdapter(Category.categories, onCategoryClick)
         binding.rvCategory.adapter = adapter
     }
 }

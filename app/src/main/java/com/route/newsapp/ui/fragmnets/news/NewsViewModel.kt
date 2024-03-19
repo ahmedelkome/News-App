@@ -2,56 +2,61 @@ package com.route.newsapp.ui.fragmnets.news
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.route.newsapp.api.ApiManager
-import com.route.newsapp.api.models.Source
-import com.route.newsapp.api.models.SourcesResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+
+import com.route.newsapp.data.api.ApiManager
+import com.route.newsapp.data.api.models.Article
+import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.database.MyDataBase
+import com.route.newsapp.data.repo.NewsRepository
+import com.route.newsapp.data.repo.NewsRepositoryImpl
+import com.route.newsapp.data.repo.data_sources.local_data_source.LocalDataSourceImpl
+import com.route.newsapp.data.repo.data_sources.remote_data_source.RemoteDataSourceImpl
+
+import kotlinx.coroutines.launch
 
 class NewsViewModel : ViewModel() {
 
-    val sourceListLiveData : MutableLiveData<List<Source?>?> = MutableLiveData(listOf())
 
-    val progressVisibilityLiveData : MutableLiveData<Boolean> = MutableLiveData(false)
+    val newsRepo: NewsRepository = NewsRepositoryImpl(
+        RemoteDataSourceImpl(),
+        LocalDataSourceImpl(MyDataBase.getInstance())
+    )
 
-    val errorVisibilityLiveData : MutableLiveData<String> = MutableLiveData("")
+    val sourceListLiveData: MutableLiveData<List<Source?>?> = MutableLiveData(listOf())
 
-    fun loadSources(categoryID:String) {
-        //changeProgressVisibility(true)
-        progressVisibilityLiveData.value = true
-        ApiManager.getInstance().getSources(ApiManager.API_KEY,categoryID)
-            .enqueue(object : Callback<SourcesResponse> {
-                override fun onResponse(
-                    call: Call<SourcesResponse>,
-                    response: Response<SourcesResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        //changeProgressVisibility(false)
-                        progressVisibilityLiveData.value = false
-                        response.body()?.sources.let {
-                            sourceListLiveData.value = it
-                           // showSources(it!!)
-                        }
-                    } else {
-                       // changeProgressVisibility(false)
-                        progressVisibilityLiveData.value = false
-                       val error = Gson().fromJson(response.errorBody()?.string(),
-                           SourcesResponse::class.java)
-                        errorVisibilityLiveData.value = "There is something wrong try again"
-//                        changeErrorVisibility(true,"There is something wrong try again")
-                    }
-                }
+    val articleListLiveData: MutableLiveData<List<Article?>?> = MutableLiveData(listOf())
 
-                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-//                    changeProgressVisibility(false)
-                    progressVisibilityLiveData.value = false
-                    errorVisibilityLiveData.value = "Check your connection with wifi or mobile data"
-//                    changeErrorVisibility(true,"Check your connection with wifi or mobile data")
-                }
+    val progressVisibilityLiveData: MutableLiveData<Boolean> = MutableLiveData(true)
 
-            })
+    val errorVisibilityLiveData: MutableLiveData<String> = MutableLiveData("")
+
+    fun loadSources(categoryID: String) {
+        viewModelScope.launch {
+            progressVisibilityLiveData.value = true
+            try {
+                val response = newsRepo.loadSources(ApiManager.API_KEY, categoryID)
+                progressVisibilityLiveData.value = false
+                sourceListLiveData.value = response
+            } catch (e: Exception) {
+                progressVisibilityLiveData.value = false
+                errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
+            }
+        }
     }
 
+    fun loadArticles(source: String) {
+        viewModelScope.launch {
+            progressVisibilityLiveData.value = true
+            try {
+                val response = newsRepo.loadArticles(ApiManager.API_KEY, source)
+                progressVisibilityLiveData.value = false
+                articleListLiveData.value = response
+            } catch (e: Exception) {
+                progressVisibilityLiveData.value = false
+                errorVisibilityLiveData.value = e.message ?: "There is something wrong try again"
+            }
+        }
+
+    }
 }

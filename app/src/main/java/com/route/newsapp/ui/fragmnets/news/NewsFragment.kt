@@ -1,37 +1,22 @@
 package com.route.newsapp.ui.fragmnets.news
 
-import android.content.Intent
 import android.os.Bundle
-import android.os.Message
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.LinearLayout
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.LabelVisibility
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.gson.Gson
-import com.route.newsapp.R
-import com.route.newsapp.api.ApiManager
-import com.route.newsapp.api.models.Article
-import com.route.newsapp.api.models.ArticlesResponse
-import com.route.newsapp.api.models.Source
-import com.route.newsapp.api.models.SourcesResponse
-import com.route.newsapp.constants.Constants
+import com.route.newsapp.data.api.models.Source
 import com.route.newsapp.databinding.FragmentNewsBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
-import com.route.newsapp.ui.screen.DetailsActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener {
-    lateinit var viewModelNews : NewsViewModel
+class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
+    lateinit var viewModelNews: NewsViewModel
     lateinit var binding: FragmentNewsBinding
     val adapter = ArticlesAdapter(listOf())
     override fun onCreateView(
@@ -45,107 +30,64 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
         binding.tabLayout.addOnTabSelectedListener(this)
         binding.rvArticles.adapter = adapter
+        binding.viewModel = viewModelNews
         viewModelNews.loadSources(categoryId)
-        initListenner()
+//        initListenner()
         observeLiveData()
     }
 
+    private fun tabMargin(tab: TabLayout.Tab?) {
+        val tabs = binding.tabLayout.getChildAt(0) as ViewGroup
+        tabs.forEach {tab->
+            val layoutParams = tab.layoutParams as LinearLayout.LayoutParams
+            layoutParams.marginStart = 20
+            tab.layoutParams = layoutParams
+            binding.tabLayout.requestLayout()
+        }
+    }
+
     private fun observeLiveData() {
-        viewModelNews.sourceListLiveData.observe(viewLifecycleOwner
+        viewModelNews.sourceListLiveData.observe(
+            viewLifecycleOwner
         ) {
             showSources(it!!)
         }
 
-        viewModelNews.progressVisibilityLiveData.observe(viewLifecycleOwner){
-            changeProgressVisibility(it)
+        viewModelNews.articleListLiveData.observe(viewLifecycleOwner) {
+            adapter.updateArticles(it)
         }
 
-        viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner){
-            if (it.isEmpty()){
+        viewModelNews.errorVisibilityLiveData.observe(viewLifecycleOwner) {
+            if (it.isEmpty()) {
                 return@observe
-            }else
-                changeErrorVisibility(true,it)
+            } else
+                changeErrorVisibility(true, it)
         }
 
     }
 
-    private fun initListenner() {
-        adapter.onArticleClick = object : ArticlesAdapter.onClickArticle {
-            override fun onitemclick(article: Article) {
-                val intent = Intent(requireActivity(), DetailsActivity::class.java)
-                intent.putExtra(Constants.ARTICLE_KEY, article)
-                startActivity(intent)
-            }
-        }
-        binding.includeErrorBady.retry.setOnClickListener {
-            changeErrorVisibility(false)
-            changeProgressVisibility(true)
-            viewModelNews.loadSources(categoryId)
-        }
-    }
-
-
-
-    private fun loadArticles(sourceId: String) {
-        ApiManager.getInstance().getArticles(
-            ApiManager.API_KEY,
-            sourceId
-        ).enqueue(object : Callback<ArticlesResponse> {
-            override fun onResponse(
-                call: Call<ArticlesResponse>,
-                response: Response<ArticlesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    adapter.updateArticles(response.body()?.articles)
-
-                } else {
-                   val response= Gson()
-                       .fromJson(response.errorBody()?.string(),
-                       SourcesResponse::class.java)
-                }
-            }
-
-            override fun onFailure(call: Call<ArticlesResponse>, t: Throwable) {
-
-            }
-
-        })
-
-    }
-
-//    private fun loadSources() {
-//        changeProgressVisibility(true)
-//        ApiManager.getInstance().getSources(ApiManager.API_KEY,categoryId)
-//            .enqueue(object : Callback<SourcesResponse> {
-//                override fun onResponse(
-//                    call: Call<SourcesResponse>,
-//                    response: Response<SourcesResponse>
-//                ) {
-//                    if (response.isSuccessful) {
-//                        changeProgressVisibility(false)
-//                        response.body()?.sources.let {
-//                            showSources(it!!)
-//                        }
-//                    } else {
-//                        changeProgressVisibility(false)
-//                       val error = Gson().fromJson(response.errorBody()?.string(), SourcesResponse::class.java)
-//                        changeErrorVisibility(true,"There is something wrong try again")
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<SourcesResponse>, t: Throwable) {
-//                    changeProgressVisibility(false)
-//                    changeErrorVisibility(true,"Check your connection with wifi or mobile data")
-//                }
-//
-//            })
+//    private fun initListenner() {
+//        adapter.onArticleClick = object : ArticlesAdapter.onClickArticle {
+//            override fun onitemclick(article: Article) {
+//                val intent = Intent(requireActivity(), DetailsActivity::class.java)
+//                intent.putExtra(Constants.ARTICLE_KEY, article)
+//                startActivity(intent)
+//            }
+//        }
+//        binding.includeErrorBady.retry.setOnClickListener {
+//            changeErrorVisibility(false)
+//            changeProgressVisibility(true)
+//            viewModelNews.loadSources(categoryId)
+//        }
 //    }
 
     private fun showSources(sources: List<Source?>) {
         sources.forEach { source ->
             val tab = binding.tabLayout.newTab()
+            tabMargin(tab)
             tab.text = source?.name
             binding.tabLayout.addTab(tab)
             tab.tag = source
@@ -156,7 +98,7 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            loadArticles(it)
+            viewModelNews.loadArticles(it)
         }
     }
 
@@ -167,18 +109,19 @@ class NewsFragment(val categoryId : String) : Fragment() , OnTabSelectedListener
     override fun onTabReselected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            loadArticles(it)
+
+            viewModelNews.loadArticles(it)
         }
     }
 
-    fun changeErrorVisibility(isVisible:Boolean,message: String = ""){
+    fun changeErrorVisibility(isVisible: Boolean, message: String = "") {
         binding.includeErrorBady.errorBady.isVisible = isVisible
-        if (isVisible){
+        if (isVisible) {
             binding.includeErrorBady.errorMessage.text = message
         }
     }
 
-    fun changeProgressVisibility(isVisible:Boolean){
+    fun changeProgressVisibility(isVisible: Boolean) {
         binding.progressBar.isVisible = isVisible
     }
 }
