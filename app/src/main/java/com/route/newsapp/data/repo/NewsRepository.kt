@@ -2,6 +2,7 @@ package com.route.newsapp.data.repo
 
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 
 interface NewsRepository {
 
@@ -9,7 +10,7 @@ interface NewsRepository {
 
     suspend fun loadArticles(
         apiKey: String,
-        source:String="",
+        source: SourceInArticles,
         search:String=""
     ): List<Article?>?
 }

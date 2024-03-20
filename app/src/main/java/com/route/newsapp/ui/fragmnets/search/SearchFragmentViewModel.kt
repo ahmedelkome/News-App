@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.route.newsapp.data.api.ApiManager
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 import com.route.newsapp.data.database.MyDataBase
 import com.route.newsapp.data.repo.NewsRepository
 import com.route.newsapp.data.repo.NewsRepositoryImpl
@@ -46,10 +47,10 @@ class SearchFragmentViewModel : ViewModel() {
         }
     }
 
-    fun loadSearchArticles(source:String="",search:String="") {
+    fun loadSearchArticles(source:SourceInArticles,search:String="") {
         viewModelScope.launch {
             try {
-                val response = newsSearchRepo.loadArticles(ApiManager.API_KEY,source )
+                val response = newsSearchRepo.loadArticles(ApiManager.API_KEY,source)
                 articleSearchListLiveData.value = response
             } catch (e: Exception) {
                 errorVisibilitySearchLiveData.value = e.localizedMessage

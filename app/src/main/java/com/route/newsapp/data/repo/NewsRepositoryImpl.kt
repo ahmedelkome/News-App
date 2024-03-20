@@ -3,6 +3,7 @@ package com.route.newsapp.data.repo
 import com.route.newsapp.data.ConnectivityChecker
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 import com.route.newsapp.data.repo.data_sources.local_data_source.LocalDataSource
 import com.route.newsapp.data.repo.data_sources.remote_data_source.RemoteDataSource
 
@@ -25,11 +26,11 @@ class NewsRepositoryImpl(
 
     override suspend fun loadArticles(
         apiKey: String,
-        source:String,
+        source: SourceInArticles,
         search:String
     ): List<Article?>? {
         if (ConnectivityChecker.isNetworkAvailable()) {
-            val response = remoteDataSource.loadArticles(apiKey, source)
+            val response = remoteDataSource.loadArticles(apiKey, source.id!!)
             val nonNullArticle = response?.filterNotNull()
             localDataSource.deleteArticle(source)
             localDataSource.saveArticles(nonNullArticle!!)
