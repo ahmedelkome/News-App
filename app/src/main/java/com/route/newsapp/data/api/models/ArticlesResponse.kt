@@ -4,12 +4,11 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-
 import com.google.gson.annotations.SerializedName
 import com.route.newsapp.data.SourceConverter
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 data class ArticlesResponse(
     @field:SerializedName("totalResults")
@@ -50,7 +49,7 @@ data class Article(
     @ColumnInfo
     @TypeConverters(SourceConverter::class)
     @field:SerializedName("source")
-    val source: Source,
+    val source: @RawValue SourceInArticles,
 
     @ColumnInfo
     @field:SerializedName("title")

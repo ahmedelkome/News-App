@@ -2,21 +2,19 @@ package com.route.newsapp.data
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
+import com.route.newsapp.data.api.models.SourceInArticles
 
-class SourceConverter {
-    companion object {
-        private val gson = Gson()
+object SourceConverter {
 
-        @TypeConverter
-        @JvmStatic
-        fun fromString(value: String): com.route.newsapp.data.api.models.Source {
-            return gson.fromJson(value, com.route.newsapp.data.api.models.Source::class.java)
-        }
+    @TypeConverter
+    @JvmStatic
+    fun fromString(value: String?): SourceInArticles? {
+        return Gson().fromJson(value, SourceInArticles::class.java)
+    }
 
-        @TypeConverter
-        @JvmStatic
-        fun toString(source: com.route.newsapp.data.api.models.Source): String {
-            return gson.toJson(source)
-        }
+    @TypeConverter
+    @JvmStatic
+    fun toString(source: SourceInArticles?): String {
+        return Gson().toJson(source)
     }
 }

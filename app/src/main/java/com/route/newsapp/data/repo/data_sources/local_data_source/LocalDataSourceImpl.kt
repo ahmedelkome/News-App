@@ -2,6 +2,7 @@ package com.route.newsapp.data.repo.data_sources.local_data_source
 
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 import com.route.newsapp.data.database.MyDataBase
 
 class LocalDataSourceImpl(val database: MyDataBase) : LocalDataSource {
@@ -9,7 +10,7 @@ class LocalDataSourceImpl(val database: MyDataBase) : LocalDataSource {
         return database.getSourceDao().getSources(category)
     }
 
-    override suspend fun loadArticles(source: String): List<Article?> {
+    override suspend fun loadArticles(source: SourceInArticles): List<Article?> {
         return database.getArticleDao().getArticle(source)
     }
 
@@ -23,7 +24,7 @@ class LocalDataSourceImpl(val database: MyDataBase) : LocalDataSource {
         database.getArticleDao().addArticles(nonNullArticleList)
     }
 
-    override suspend fun deleteArticle(source: String) {
+    override suspend fun deleteArticle(source: SourceInArticles) {
         database.getArticleDao().deleteArticle(source)
     }
 

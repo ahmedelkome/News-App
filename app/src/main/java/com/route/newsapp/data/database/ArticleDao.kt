@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.route.newsapp.data.api.models.Article
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 
 @Dao
 interface ArticleDao {
@@ -14,8 +15,8 @@ interface ArticleDao {
     suspend fun addArticles(artilces: List<Article>)
 
     @Query("select * from Article where source = :source")
-    suspend fun getArticle(source: String): List<Article>
+    suspend fun getArticle(source: SourceInArticles): List<Article>
 
     @Query("delete from Article where source = :source")
-    suspend fun deleteArticle(source: String)
+    suspend fun deleteArticle(source: SourceInArticles)
 }

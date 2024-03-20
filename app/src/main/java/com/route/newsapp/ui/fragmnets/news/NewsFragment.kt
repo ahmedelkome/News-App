@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.route.newsapp.data.api.models.Source
+import com.route.newsapp.data.api.models.SourceInArticles
 import com.route.newsapp.databinding.FragmentNewsBinding
 import com.route.newsapp.ui.adapter.articlesadapter.ArticlesAdapter
 
@@ -41,7 +42,7 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
 
     private fun tabMargin(tab: TabLayout.Tab?) {
         val tabs = binding.tabLayout.getChildAt(0) as ViewGroup
-        tabs.forEach {tab->
+        tabs.forEach { tab ->
             val layoutParams = tab.layoutParams as LinearLayout.LayoutParams
             layoutParams.marginStart = 20
             tab.layoutParams = layoutParams
@@ -98,7 +99,8 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-            viewModelNews.loadArticles(it)
+            val sourceInArticle = SourceInArticles(source.id, source.name)
+            viewModelNews.loadArticles(sourceInArticle)
         }
     }
 
@@ -109,8 +111,8 @@ class NewsFragment(val categoryId: String) : Fragment(), OnTabSelectedListener {
     override fun onTabReselected(tab: TabLayout.Tab?) {
         val source = tab?.tag as Source?
         source?.id?.let {
-
-            viewModelNews.loadArticles(it)
+            val sourceInArticle = SourceInArticles(source.id, source.name)
+            viewModelNews.loadArticles(sourceInArticle)
         }
     }
 
